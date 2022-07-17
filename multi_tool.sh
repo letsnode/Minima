@@ -5,12 +5,12 @@ ram="1G"
 port="9001"
 
 # Options
-. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/colors.sh) --
+. <(wget -qO- https://raw.githubusercontent.com/letsnode/Utils/main/bashbuilder/colors.sh) --
 option_value(){ echo "$1" | sed -e 's%^--[^=]*=%%g; s%^-[^=]*=%%g'; }
 while test $# -gt 0; do
 	case "$1" in
 	-h|--help)
-		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
+		. <(wget -qO- https://raw.githubusercontent.com/letsnode/Utils/main/bashbuilder/logo.sh)
 		echo
 		echo -e "${C_LGn}Functionality${RES}: the script performs many actions related to a Minima node"
 		echo
@@ -25,7 +25,7 @@ while test $# -gt 0; do
 		echo -e "  -un, --uninstall    uninstall the node"
 		echo
 		echo -e "${C_LGn}Useful URLs${RES}:"
-		echo -e "https://github.com/SecorD0/Minima/blob/main/multi_tool.sh - script URL"
+		echo -e "https://raw.githubusercontent.com/letsnode/Minima//main/tools.sh - script URL"
 		echo -e "https://teletype.in/@letskynode/Minima_EN — English-language a node installation guide"
 		echo -e "https://teletype.in/@letskynode/Minima_RU — Russian-language a node installation guide"
 		echo -e "https://t.me/letskynode — node Community"
@@ -68,10 +68,10 @@ install() {
 	
 	if [ "$port" = "9001" ]; then
 		local node_name="minima"
-		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "minima_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU 2> /dev/null" -a
+		. <(wget -qO- https://raw.githubusercontent.com/letsnode/utils/main/bashbuilder/addvar.sh) -n "minima_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU 2> /dev/null" -a
 	else
 		local node_name="minima_${port}"
-		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "${node_name}_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU -p $((port+1)) 2> /dev/null" -a
+		. <(wget -qO- https://raw.githubusercontent.com/letsnode/utils/main/bashbuilder/addvar.sh) -n "${node_name}_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU -p $((port+1)) 2> /dev/null" -a
 	fi
 	local is_docker=`docker ps -a 2>/dev/null | grep minima_node`
 	if [ -n "$is_docker" ]; then
@@ -118,9 +118,9 @@ WantedBy=multi-user.target" > "/etc/systemd/system/${node_name}.service"
 	sudo systemctl daemon-reload
 	sudo systemctl enable "$node_name"
 	sudo systemctl restart "$node_name"
-	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "${node_name}_log" -v "sudo journalctl -fn 100 -u ${node_name}" -a
+	. <(wget -qO- https://raw.githubusercontent.com/letsnode/utils/main/bashbuilder/addvar.sh) -n "${node_name}_log" -v "sudo journalctl -fn 100 -u ${node_name}" -a
 	printf_n "${C_LGn}Done!${RES}\n"
-	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
+	. <(wget -qO- https://raw.githubusercontent.com/letsnode/utils/main/bashbuilder/logo.sh)
 	printf_n "
 The node was ${C_LGn}started${RES}.
 
@@ -134,10 +134,10 @@ To restart the node: ${C_LGn}systemctl restart ${node_name}${RES}
 docker_install() {
 	if [ "$port" = "9001" ]; then
 		local node_name="minima"
-		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "minima_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU 2> /dev/null" -a
+		. <(wget -qO- https://raw.githubusercontent.com/letsnode/utils/main/bashbuilder/addvar.sh) -n "minima_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU 2> /dev/null" -a
 	else
 		local node_name="minima_${port}"
-		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "${node_name}_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU -p $((port+1)) 2> /dev/null" -a
+		. <(wget -qO- https://raw.githubusercontent.com/letsnode/utils/main/bashbuilder/addvar.sh) -n "${node_name}_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU -p $((port+1)) 2> /dev/null" -a
 	fi
 	local is_docker=`docker ps -a 2>/dev/null | grep "${node_name}_node"`
 	if [ -n "$is_docker" ]; then
@@ -152,12 +152,12 @@ docker_install() {
 		return 0 2>/dev/null; exit 0
 	else
 		printf_n "${C_LGn}Node installation...${RES}"
-		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/installers/docker.sh)
+		. <(wget -qO- https://raw.githubusercontent.com/letsnode/utils/main/installers/docker.sh)
 		docker run -dit --restart on-failure --name "${node_name}_node" -v $HOME/.minima/:/minima/.minima -p $port:9001 -p $((port+1)):9002 secord/minima
 	fi
-	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "${node_name}_log" -v "docker logs ${node_name}_node -fn 100" -a
+	. <(wget -qO- https://raw.githubusercontent.com/letsnode/utils/main/bashbuilder/addvar.sh) -n "${node_name}_log" -v "docker logs ${node_name}_node -fn 100" -a
 	printf_n "${C_LGn}Done!${RES}\n"
-	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
+	. <(wget -qO- https://raw.githubusercontent.com/letsnode/utils/main/bashbuilder/logo.sh)
 	printf_n "
 The node was ${C_LGn}started${RES}.
 
@@ -200,5 +200,5 @@ if [ `whoami` != "root" ]; then
 	sudo su -
 fi
 sudo apt install wget -y &>/dev/null
-. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
+. <(wget -qO- https://raw.githubusercontent.com/letsnode/utils/main/bashbuilder/logo.sh)
 $function
